@@ -1,7 +1,10 @@
 import React, { useState } from 'react'
 import { Avatar, Button, Container, Grid, makeStyles, Paper, Typography } from '@material-ui/core';
+import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Input from './Input';
+import { signin, signup } from '../../actions/auth';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -33,7 +36,9 @@ const initialState = { firstName: '', lastName: '', email: '', password: '', con
 
 const Auth = () => {
   const [form, setForm] = useState(initialState);
-  const [isSignup, setIsSignup] = useState(false);
+  const [isSignup, setIsSignup] = useState(false)
+  const dispatch = useDispatch();
+  const history = useHistory();
   const classes = useStyles();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -49,9 +54,9 @@ const Auth = () => {
     e.preventDefault();
 
     if (isSignup) {
-      
+      dispatch(signup(form, history));
     } else {
-      
+      dispatch(signin(form, history));
     }
   };
 
@@ -79,7 +84,7 @@ const Auth = () => {
           <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
             { isSignup ? 'Sign Up' : 'Sign In' }
           </Button>
-          <Grid container justify="flex-end">
+          <Grid container justifyContent="flex-end">
             <Grid item>
               <Button onClick={switchMode}>
                 { isSignup ? 'Already have an account? Sign in' : "Don't have an account? Sign Up" }

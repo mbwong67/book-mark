@@ -5,6 +5,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 
 import bookmarkRoutes from './routes/bookmarks.js';
+import userRoutes from './routes/users.js'
 
 
 const app = express();
@@ -19,7 +20,7 @@ mongoose
     .catch(err => console.log(err));
 
 app.use('/bookmarks', bookmarkRoutes);
-
+app.use("/user", userRoutes);
 
 const port = process.env.PORT || 8800;
 

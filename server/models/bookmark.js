@@ -3,12 +3,13 @@ import mongoose from "mongoose";
 const bookmarkSchema = mongoose.Schema({
     title: String,
     description: String,
+    name: String,
     creator: String,
     tags: [String], 
     selectedFile: String,
-    likeCount: {
-        type: Number,
-        default: 0
+    likes: {
+        type: [String],
+        default: []
     },
     createdAt: {
         type: Date,

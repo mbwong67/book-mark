@@ -30,6 +30,7 @@ const useStyles = makeStyles((theme) => ({
 const Form = ({ currentId, setCurrentId }) => {
   const [bookmarkData, setBookmarkData] = useState({ creator: '', title: '', description: '', tags: '', selectedFile: '' });
   const bookmark = useSelector((state) => (currentId ? state.bookmarks.find((bookmark) => bookmark._id === currentId) : null));
+  const user = JSON.parse(localStorage.getItem('bookmark-profile'));
   const dispatch = useDispatch();
   const classes = useStyles();
 
@@ -46,19 +47,28 @@ const Form = ({ currentId, setCurrentId }) => {
     event.preventDefault();
 
     if (currentId === 0) {
-      dispatch(createBookmark(bookmarkData));
+      dispatch(createBookmark({ ...bookmarkData, creator: user?.result?._id, name: user?.result?.name }));
       clear();
     } else {
-      dispatch(updateBookmark(currentId, bookmarkData));
+      dispatch(updateBookmark(currentId, { ...bookmarkData, creator: user?.result?._id, name: user?.result?.name }));
       clear();
-    }    
+    }  
   };
+
+  if (!user?.result?.name) {
+    return (
+      <Paper className={classes.paper}>
+        <Typography variant="h6" align="center">
+          Please Sign In to create or update bookmarks.
+        </Typography>
+      </Paper>
+    );
+  }
 
   return (
     <Paper className={classes.paper}>
       <form autoComplete="off" noValidate className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit}>
-        <Typography variant="h6">{currentId ? `Editing "${bookmark.title}"` : 'Add Bookmark'}</Typography>
-        <TextField name="creator" variant="outlined" label="Creator" fullWidth value={bookmarkData.creator} onChange={(e) => setBookmarkData({ ...bookmarkData, creator: e.target.value })} />
+        <Typography variant="h6">{currentId ? `Editing "${bookmarkData.title}"` : 'Add Bookmark'}</Typography>
         <TextField name="title" variant="outlined" label="Title" fullWidth value={bookmarkData.title} onChange={(e) => setBookmarkData({ ...bookmarkData, title: e.target.value })} />
         <TextField name="description" variant="outlined" label="Description" fullWidth multiline minRows={4} value={bookmarkData.description} onChange={(e) => setBookmarkData({ ...bookmarkData, description: e.target.value })} />
         <TextField name="tags" variant="outlined" label="Tags (coma separated)" fullWidth value={bookmarkData.tags} onChange={(e) => setBookmarkData({ ...bookmarkData, tags: e.target.value.split(',').map((tag) => tag.trim()) })} />

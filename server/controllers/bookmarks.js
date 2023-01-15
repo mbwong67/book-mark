@@ -14,9 +14,9 @@ export const getBookmark = async (req, res) => {
     const { id } = req.params;
 
     try {
-        const post = await PostMessage.findById(id);
+        const bookmark = await Bookmark.findById(id);
         
-        res.status(200).json(post);
+        res.status(200).json(bookmark);
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
@@ -51,17 +51,28 @@ export const deleteBookmark = async (req, res) => {
 
     await Bookmark.findByIdAndRemove(id);
 
-    res.json({ message: "Post deleted successfully." });
+    res.json({ message: "Bookmark deleted successfully." });
 }
 
 export const likeBookmark = async (req, res) => {
     const { id } = req.params;
 
+    if (!req.userId) {
+        return res.json({ message: "Must login to like bookmark" });
+    }
+
     if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No bookmark with id: ${id}`);
     
-    const post = await Bookmark.findById(id);
+    const bookmark = await Bookmark.findById(id);
 
-    const updatedPost = await Bookmark.findByIdAndUpdate(id, { likeCount: post.likeCount + 1 }, { new: true });
-    
-    res.json(updatedPost);
+    const index = bookmark.likes.findIndex((id) => id === String(req.userId));
+
+    if (index === -1) {
+      bookmark.likes.push(req.userId);
+    } else {
+      bookmark.likes = bookmark.likes.filter((id) => id !== String(req.userId));
+    }
+    const updatedBookmark = await Bookmark.findByIdAndUpdate(id, bookmark, { new: true });
+
+    res.json(updatedBookmark);
 }

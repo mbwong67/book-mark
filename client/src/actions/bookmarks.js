@@ -19,9 +19,9 @@ export const createBookmark = (bookmark) => async( dispatch ) => {
     }   
 };
 
-export const updateBookmark = (id, post) => async (dispatch) => {
+export const updateBookmark = (id, bookmark) => async (dispatch) => {
   try {
-    const { data } = await api.updateBookmark(id, post);
+    const { data } = await api.updateBookmark(id, bookmark);
 
     dispatch({ type: UPDATE, payload: data });
   } catch (error) {
