@@ -8,23 +8,26 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
   },
-  smMargin: {
-    margin: theme.spacing(1),
-  },
-  actionDiv: {
-    textAlign: 'center',
+  loading: {
+    height: '100%',
+    width: '100%',
+    display: 'flex', 
+    justifyContent: 'center', 
+    alignItems: 'center',     
   },
 }));
 
 const Bookmarks = ({ setCurrentId }) => {
-  const bookmarks = useSelector((state) => state.bookmarks);
+  const { bookmarks, isLoading } = useSelector((state) => state.bookmarks);
   const classes = useStyles();
 
+  if (!bookmarks.length && !isLoading) return 'No posts';
+
   return (
-    !bookmarks.length ? <CircularProgress /> : (
-      <Grid className={classes.container} container alignItems="stretch" spacing={3}>
+    isLoading ? <div className={classes.loading}><CircularProgress /></div> : (
+      <Grid className={classes.mainCcontainer} container alignItems="stretch" spacing={3}>
         {bookmarks.map((bookmark) => (
-          <Grid key={bookmark._id} item xs={12} sm={6} md={6}>
+          <Grid key={bookmark._id} item xs={12} sm={12} md={6} lg={3}>
             <Bookmark bookmark={bookmark} setCurrentId={setCurrentId} />
           </Grid>
         ))}

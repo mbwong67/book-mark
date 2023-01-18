@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Form = ({ currentId, setCurrentId }) => {
-  const [bookmarkData, setBookmarkData] = useState({ creator: '', title: '', description: '', tags: '', selectedFile: '' });
+  const [bookmarkData, setBookmarkData] = useState({ creatorId: '', creatorName: '', title: '', description: '', tags: '', selectedFile: '' });
   const bookmark = useSelector((state) => (currentId ? state.bookmarks.find((bookmark) => bookmark._id === currentId) : null));
   const user = JSON.parse(localStorage.getItem('bookmark-profile'));
   const dispatch = useDispatch();
@@ -40,17 +40,17 @@ const Form = ({ currentId, setCurrentId }) => {
 
   const clear = () => {
     setCurrentId(0);
-    setBookmarkData({ creator: '', title: '', description: '', tags: '', selectedFile: '' });
+    setBookmarkData({ creatorId: '', creatorName: '', title: '', description: '', tags: '', selectedFile: '' });
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
     if (currentId === 0) {
-      dispatch(createBookmark({ ...bookmarkData, creator: user?.result?._id, name: user?.result?.name }));
+      dispatch(createBookmark({ ...bookmarkData, creatorId: user?.result?._id, creatorName: user?.result?.name }));
       clear();
     } else {
-      dispatch(updateBookmark(currentId, { ...bookmarkData, creator: user?.result?._id, name: user?.result?.name }));
+      dispatch(updateBookmark(currentId, { ...bookmarkData, creatorId: user?.result?._id, creatorName: user?.result?.name }));
       clear();
     }  
   };

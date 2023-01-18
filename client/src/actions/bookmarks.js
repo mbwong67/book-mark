@@ -1,21 +1,44 @@
 import * as api from '../api';
-import { CREATE, DELETE, FETCH_ALL, LIKE, UPDATE } from './actionTypes.js';
+import { CREATE, DELETE, END_LOADING, FETCH_ALL, FETCH_BOOKMARK, FETCH_BY_SEARCH, LIKE, START_LOADING, UPDATE } from './actionTypes.js';
 
-export const getBookmarks = () => async ( dispatch ) => {
+export const getBookmark = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: START_LOADING });
+    const { data } = await api.fetchBookmark(id);
+    dispatch({ type: FETCH_BOOKMARK, payload: { bookmark: data } });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getBookmarks = (page) => async ( dispatch ) => {
     try {
-        const { data } = await api.fetchBookmarks();
-        dispatch({ type: FETCH_ALL, payload: data });
+      dispatch({ type: START_LOADING });
+      const { data: { data, currentPage, numberOfPages } } = await api.fetchBookmarks(page);
+      dispatch({ type: FETCH_ALL, payload: { data, currentPage, numberOfPages } });
+      dispatch({ type: END_LOADING });
     } catch (error) {
-        console.log(error.message);
+      console.log(error.message);
     }    
+};
+
+export const getBookmarksBySearch = (searchQuery) => async (dispatch) => {
+  try {
+    dispatch({ type: START_LOADING });
+    const { data: { data } } = await api.fetchBookmarksBySearch(searchQuery);
+    dispatch({ type: FETCH_BY_SEARCH, payload: { data } });
+    dispatch({ type: END_LOADING });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const createBookmark = (bookmark) => async( dispatch ) => {
     try {
-        const { data } = await api.createBookmark(bookmark);
-        dispatch({ type: CREATE, payload: data });
+      const { data } = await api.createBookmark(bookmark);
+      dispatch({ type: CREATE, payload: data });
     } catch (error) {
-        console.log(error.message);
+      console.log(error.message);
     }   
 };
 

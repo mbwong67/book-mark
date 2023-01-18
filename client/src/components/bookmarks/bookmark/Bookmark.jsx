@@ -78,13 +78,13 @@ const Bookmark = ({ bookmark, setCurrentId }) => {
   };
 
   return (
-    <Card className={classes.card}>
+    <Card className={classes.card} raised elevation={6}>
       <CardMedia className={classes.media} image={bookmark.selectedFile || 'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png'} title={bookmark.title} />
       <div className={classes.overlay}>
-        <Typography variant="h6">{bookmark.name}</Typography>
+        <Typography variant="h6">{bookmark.creatorName}</Typography>
         <Typography variant="body2">{moment(bookmark.createdAt).fromNow()}</Typography>
       </div>
-      {user?.result?._id === bookmark?.creator && (
+      {user?.result?._id === bookmark?.creatorId && (
         <div className={classes.overlay2}>
           <Button style={{ color: 'white' }} size="small" onClick={() => setCurrentId(bookmark._id)}><MoreHorizIcon fontSize="medium" /></Button>
         </div>
@@ -98,7 +98,7 @@ const Bookmark = ({ bookmark, setCurrentId }) => {
       </CardContent>
       <CardActions className={classes.cardActions}>
         <Button size="small" color="primary" onClick={() => dispatch(likeBookmark(bookmark._id))}> <Likes /> </Button>
-        {user?.result?._id === bookmark?.creator && (
+        {user?.result?._id === bookmark?.creatorId && (
           <Button size="small" color="primary" onClick={() => dispatch(deleteBookmark(bookmark._id))}><DeleteIcon fontSize="small" /> Delete</Button>
         )}
       </CardActions>

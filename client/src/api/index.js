@@ -10,7 +10,9 @@ API.interceptors.request.use((req) => {
   return req;
 });
 
-export const fetchBookmarks = () => API.get('/bookmarks');
+export const fetchBookmark = (id) => API.get(`/bookmarks/${id}`);
+export const fetchBookmarks = (page) => API.get(`/bookmarks?page=${page}`);
+export const fetchBookmarksBySearch = (searchQuery) => API.get(`/bookmarks/search?searchQuery=${searchQuery.search || 'none'}&tags=${searchQuery.tags}`);
 export const createBookmark = (newBookmark) => API.post('/bookmarks', newBookmark);
 export const updateBookmark = (id, updatedBookmark) => API.patch(`/bookmarks/${id}`, updatedBookmark);
 export const likeBookmark = (id) => API.patch(`/bookmarks/${id}/likeBookmark`);

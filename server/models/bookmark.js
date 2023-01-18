@@ -3,8 +3,8 @@ import mongoose from "mongoose";
 const bookmarkSchema = mongoose.Schema({
     title: String,
     description: String,
-    name: String,
-    creator: String,
+    creatorId: String,
+    creatorName: String,
     tags: [String], 
     selectedFile: String,
     likes: {

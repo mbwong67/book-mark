@@ -2,9 +2,15 @@ import mongoose from "mongoose";
 import Bookmark from "../models/bookmark.js";
 
 export const getBookmarks = async (req, res) => {
+    const { page } = req.query;
+    
     try {
-        const bookmarks = await Bookmark.find();
-        res.status(200).json(bookmarks);
+        const LIMIT = 8;
+        const startIndex = (Number(page) - 1) * LIMIT; // get the starting index of every page
+        const total = await Bookmark.countDocuments({});
+        const bookmarks = await Bookmark.find().sort({ _id: -1 }).limit(LIMIT).skip(startIndex);
+
+        res.status(200).json({ data: bookmarks, currentPage: Number(page), numberOfPages: Math.ceil(total / LIMIT)});
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
@@ -15,9 +21,22 @@ export const getBookmark = async (req, res) => {
 
     try {
         const bookmark = await Bookmark.findById(id);
-        
+
         res.status(200).json(bookmark);
     } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+}
+
+export const getBookmarksBySearch = async (req, res) => {
+    const { searchQuery, tags } = req.query;
+    
+    try {
+        const title = new RegExp(searchQuery, "i");
+        const bookmarks = await Bookmark.find({ $or: [ { title }, { tags: { $in: tags.split(',') } } ]});
+
+        res.json({ data: bookmarks });
+    } catch (error) {    
         res.status(404).json({ message: error.message });
     }
 }

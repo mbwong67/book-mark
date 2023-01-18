@@ -15,7 +15,8 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
   },
   heading: {
-    color: '#966f33',
+    color: '#3A3B3C',
+    textDecoration: 'none',
   },
   toolbar: {
     display: 'flex',
