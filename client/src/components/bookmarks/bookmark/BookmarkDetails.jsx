@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { CircularProgress, makeStyles, Paper, Typography } from '@material-ui/core';
+import { Link, useParams } from 'react-router-dom';
+import { CircularProgress, Divider, makeStyles, Paper, Typography } from '@material-ui/core';
 import moment from 'moment';
 
-import { getBookmark } from '../../../actions/bookmarks';
+import { getBookmark, getBookmarksBySearch } from '../../../actions/bookmarks';
 
 const useStyles = makeStyles((theme) => ({
   media: {
@@ -34,11 +34,11 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   loadingPaper: {
-    display: 'flex', 
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    padding: '20px', 
-    borderRadius: '15px', 
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: '20px',
+    borderRadius: '15px',
     height: '39vh',
   },
 }));
@@ -68,10 +68,14 @@ const BookmarkDetails = () => {
       <div className={classes.card}>
         <div className={classes.section}>
           <Typography variant="h3" component="h2">{bookmark.title}</Typography>
-          <Typography gutterBottom variant="h6" color="textSecondary" component="h2">{bookmark.tags.map((tag) => `#${tag} `)}</Typography>
+          <Typography gutterBottom variant="h6" color="textSecondary" component="h2">{bookmark.tags.map((tag) => (
+            <Link to={`/tags/${tag}`} style={{ textDecoration: 'none', color: '#3f51b5' }}>{` #${tag} `}</Link>
+          ))}
+          </Typography>
           <Typography gutterBottom variant="body1" component="p">{bookmark.description}</Typography>
           <Typography variant="h6">Created by: {bookmark.creatorName}</Typography>
           <Typography variant="body1">{moment(bookmark.createdAt).fromNow()}</Typography>
+          <Divider style={{ margin: '20px 0' }} />          
         </div>
         <div className={classes.imageSection}>
           <img className={classes.media} src={bookmark.selectedFile || 'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png'} alt={bookmark.title} />

@@ -6,6 +6,7 @@ export const getBookmark = (id) => async (dispatch) => {
     dispatch({ type: START_LOADING });
     const { data } = await api.fetchBookmark(id);
     dispatch({ type: FETCH_BOOKMARK, payload: { bookmark: data } });
+    dispatch({ type: END_LOADING });
   } catch (error) {
     console.log(error);
   }
