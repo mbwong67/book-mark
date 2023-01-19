@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import { CircularProgress, Divider, makeStyles, Paper, Typography } from '@material-ui/core';
 import moment from 'moment';
 
@@ -41,17 +41,35 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '15px',
     height: '39vh',
   },
+  recommendedBookmarks: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+    },
+  },
 }));
 
 const BookmarkDetails = () => {
-  const { bookmark, isLoading } = useSelector((state) => state.bookmarks);
+  const { bookmark, bookmarks, isLoading } = useSelector((state) => state.bookmarks);
   const dispatch = useDispatch();
+  const history = useHistory();
   const classes = useStyles();
   const { id } = useParams();
 
   useEffect(() => {
     dispatch(getBookmark(id));
   }, [id, dispatch]);
+
+  useEffect(() => {
+    if (bookmark) {
+      dispatch(getBookmarksBySearch({ search: 'none', tags: bookmark?.tags.join(',') }));
+    }
+  }, [bookmark, dispatch]);
+
+  const recommendedBookmarks = bookmarks.filter(({ _id }) => _id !== bookmarks._id);
+
+  const openBookmark = (_id) => history.push(`/bookmarks/${_id}`);
 
   if (!bookmark) return null;
 
@@ -81,6 +99,20 @@ const BookmarkDetails = () => {
           <img className={classes.media} src={bookmark.selectedFile || 'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png'} alt={bookmark.title} />
         </div>
       </div>
+      {!!recommendedBookmarks.length && (
+        <div className={classes.section}>
+          <Typography gutterBottom variant="h5">You might also like:</Typography>
+          <Divider />
+          <div className={classes.recommendedBookmarks}>
+            {recommendedBookmarks.map(({ likes, selectedFile, _id }) => (
+              <div style={{ margin: '20px', cursor: 'pointer' }} onClick={() => openBookmark(_id)} key={_id}>
+                <img src={selectedFile} width="200px" />
+                <Typography gutterBottom variant="subtitle1">Likes: {likes.length}</Typography>                
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </Paper>
   );
 };
