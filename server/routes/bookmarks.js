@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get('/', getBookmarks);
 router.get('/search', getBookmarksBySearch);
-router.get('/:id', auth, getBookmark);
+router.get('/:id', getBookmark);
 
 router.post('/', auth, createBookmark);
 router.patch('/:id', auth, updateBookmark);
