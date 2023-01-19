@@ -34,10 +34,11 @@ export const getBookmarksBySearch = (searchQuery) => async (dispatch) => {
   }
 };
 
-export const createBookmark = (bookmark) => async( dispatch ) => {
+export const createBookmark = (bookmark, history) => async( dispatch ) => {
     try {
       const { data } = await api.createBookmark(bookmark);
       dispatch({ type: CREATE, payload: data });
+      history.push(`/bookmarks/${data._id}`);
     } catch (error) {
       console.log(error.message);
     }   

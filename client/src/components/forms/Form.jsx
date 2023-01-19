@@ -3,6 +3,7 @@ import { Button, makeStyles, Paper, TextField, Typography } from '@material-ui/c
 import { useDispatch, useSelector } from 'react-redux';
 import FileBase from 'react-file-base64';
 import { createBookmark, updateBookmark } from '../../actions/bookmarks';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,6 +33,7 @@ const Form = ({ currentId, setCurrentId }) => {
   const bookmark = useSelector((state) => (currentId ? state.bookmarks.find((bookmark) => bookmark._id === currentId) : null));
   const user = JSON.parse(localStorage.getItem('bookmark-profile'));
   const dispatch = useDispatch();
+  const history = useHistory();
   const classes = useStyles();
 
   useEffect(() => {
@@ -47,7 +49,7 @@ const Form = ({ currentId, setCurrentId }) => {
     event.preventDefault();
 
     if (currentId === 0) {
-      dispatch(createBookmark({ ...bookmarkData, creatorId: user?.result?._id, creatorName: user?.result?.name }));
+      dispatch(createBookmark({ ...bookmarkData, creatorId: user?.result?._id, creatorName: user?.result?.name }, history));
       clear();
     } else {
       dispatch(updateBookmark(currentId, { ...bookmarkData, creatorId: user?.result?._id, creatorName: user?.result?.name }));
