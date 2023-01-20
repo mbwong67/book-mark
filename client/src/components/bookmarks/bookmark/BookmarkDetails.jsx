@@ -67,7 +67,7 @@ const BookmarkDetails = () => {
     }
   }, [bookmark, dispatch]);
 
-  const recommendedBookmarks = bookmarks.filter(({ _id }) => _id !== bookmark._id);
+  const recommendedBookmarks = bookmarks.filter(({ _id }) => _id !== bookmark?._id);
 
   const openBookmark = (_id) => history.push(`/bookmarks/${_id}`);
 
