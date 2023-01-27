@@ -22,6 +22,17 @@ mongoose
 app.use('/bookmarks', bookmarkRoutes);
 app.use("/user", userRoutes);
 
+// serve Static assets
+if(process.env.NODE_ENV === 'production'){
+    app.use(express.static(path.join(__dirname, '../client/build')));
+
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(__dirname, '../', 'client', 'build', 'index.html'));
+    });
+} else {
+    app.get('*', (req, res) => res.send('Please set to Production mode'));
+}
+
 const port = process.env.PORT || 8800;
 
 app.listen(port, () => {
