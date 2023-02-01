@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import path from 'path';
 
 import bookmarkRoutes from './routes/bookmarks.js';
 import userRoutes from './routes/users.js'
