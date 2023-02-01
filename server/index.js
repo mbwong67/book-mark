@@ -4,10 +4,13 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 import bookmarkRoutes from './routes/bookmarks.js';
 import userRoutes from './routes/users.js'
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(bodyParser.json({ limit: "30mb", extended: true}));
