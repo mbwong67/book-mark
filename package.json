@@ -1,6 +1,9 @@
 {
   "name": "book-mark",
   "version": "1.0.0",
+  "engines": {
+    "node": "16.x"
+  },
   "description": "App allows users to create bookmarks for their favorite books and search existing bookmarks",
   "main": "index.js",
   "type": "module",
