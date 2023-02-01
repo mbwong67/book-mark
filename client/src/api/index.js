@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API = axios.create({ baseURL: 'http://localhost:8800/' });
+const API = axios.create({ baseURL: process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8800/' });
 
 API.interceptors.request.use((req) => {
   if (localStorage.getItem('bookmark-profile')) {
